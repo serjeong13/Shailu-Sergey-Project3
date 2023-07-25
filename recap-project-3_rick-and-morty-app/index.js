@@ -1,3 +1,6 @@
+import { createCharacterCard } from "./components/card/card.js";
+import { fetchCharacters } from "./components/card/data.js";
+
 const cardContainer = document.querySelector('[data-js="card-container"]');
 const searchBarContainer = document.querySelector(
   '[data-js="search-bar-container"]'
@@ -12,3 +15,17 @@ const pagination = document.querySelector('[data-js="pagination"]');
 const maxPage = 1;
 const page = 1;
 const searchQuery = "";
+
+function createCharacterCards(characters) {
+  const characterCards = characters.map(createCharacterCard);
+  characterCards.forEach((card) => {
+    cardContainer.appendChild(card);
+  });
+}
+async function main() {
+  // Fetch character data from API
+  const characters = await fetchCharacters();
+  // Create and append character cards
+  createCharacterCards(characters);
+}
+main();
