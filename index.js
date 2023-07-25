@@ -1,4 +1,5 @@
 import { createCharacterCard } from "./components/card/card.js";
+import { updatePagination } from "./components/nav-pagination/nav-pagination.js";
 const cardContainer = document.querySelector('[data-js="card-container"]');
 const searchBarContainer = document.querySelector(
   '[data-js="search-bar-container"]'
@@ -31,22 +32,23 @@ function createCharacterCards(characters) {
 }
 
 async function main() {
-  // Fetch character data from API
   const data = await fetchCharacters(page);
-  // Create and append character cards
+
   createCharacterCards(data.results);
 }
 
 main();
 
-pagination.textContent = `${page} of ${maxPage}`;
+updatePagination(page, maxPage, pagination);
+
+updatePagination(page, maxPage, pagination);
 nextButton.addEventListener("click", async (event) => {
   event.preventDefault();
   if (page < maxPage) {
     page++;
-    pagination.textContent = `${page} of ${maxPage}`;
+    updatePagination(page, maxPage, pagination);
     const data = await fetchCharacters(page);
-    cardContainer.innerHTML = ""; // Clear previous cards
+    cardContainer.innerHTML = "";
     createCharacterCards(data.results);
   }
 });
@@ -55,9 +57,9 @@ prevButton.addEventListener("click", async (event) => {
   event.preventDefault();
   if (page > 1) {
     page--;
-    pagination.textContent = `${page} of ${maxPage}`;
+    updatePagination(page, maxPage, pagination);
     const data = await fetchCharacters(page);
-    cardContainer.innerHTML = ""; // Clear previous cards
+    cardContainer.innerHTML = "";
     createCharacterCards(data.results);
   }
 });
@@ -65,9 +67,9 @@ prevButton.addEventListener("click", async (event) => {
 searchBar.addEventListener("submit", async (event) => {
   event.preventDefault();
   searchQuery = event.target.elements.query.value;
-  const data = await fetchCharacters(page);
-  maxPage = data.info.pages; // Updating maxPage based on the search results
-  cardContainer.innerHTML = ""; // Clear previous cards
+  const data = await fetchCharacters(1);
+  maxPage = data.info.pages;
+  cardContainer.innerHTML = "";
   createCharacterCards(data.results);
-  pagination.textContent = `${page} of ${maxPage}`;
+  updatePagination(page, maxPage, pagination);
 });
